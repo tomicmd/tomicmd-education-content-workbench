@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>内容创作工作台 - 配置向导</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo i {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .help-text {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .info-box p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .steps {
+            margin-top: 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-content p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h1>内容创作工作台</h1>
+        <p class="subtitle">教育内容策略优化助手</p>
+
+        <div class="info-box">
+            <h3><i class="fas fa-info-circle"></i> 如何获取API Token</h3>
+            <p>1. 访问你的Agent部署页面<br>2. 点击「API Token」按钮<br>3. 复制生成的Token</p>
+        </div>
+
+        <div id="status" class="status"></div>
+
+        <form id="configForm" onsubmit="saveConfig(event)">
+            <div class="form-group">
+                <label for="apiToken">
+                    <i class="fas fa-key"></i> API Token
+                </label>
+                <input
+                    type="text"
+                    id="apiToken"
+                    placeholder="请输入你的API Token"
+                    required
+                >
+                <p class="help-text">你的API Token，用于连接AI服务</p>
+            </div>
+
+            <div class="form-group">
+                <label for="baseUrl">
+                    <i class="fas fa-server"></i> API Base URL
+                </label>
+                <input
+                    type="text"
+                    id="baseUrl"
+                    value="https://hxf8rythx2.coze.site/stream_run"
+                    required
+                >
+                <p class="help-text">API服务地址，通常不需要修改</p>
+            </div>
+
+            <div class="form-group">
+                <label for="projectId">
+                    <i class="fas fa-id-card"></i> Project ID
+                </label>
+                <input
+                    type="text"
+                    id="projectId"
+                    value="7612909369184960562"
+                    required
+                >
+                <p class="help-text">项目ID，通常不需要修改</p>
+            </div>
+
+            <button type="submit">
+                <i class="fas fa-check"></i> 保存并进入工作台
+            </button>
+        </form>
+
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>配置API Token</h4>
+                    <p>输入从部署页面获取的API Token</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>保存配置</h4>
+                    <p>点击保存按钮，配置会存储在浏览器中</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>开始使用</h4>
+                    <p>自动跳转到工作台，开始创作内容</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 加载已保存的配置
+        window.addEventListener('load', () => {
+            const savedToken = localStorage.getItem('api_token');
+            const savedBaseUrl = localStorage.getItem('api_base_url');
+            const savedProjectId = localStorage.getItem('api_project_id');
+
+            if (savedToken) {
+                document.getElementById('apiToken').value = savedToken;
+            }
+            if (savedBaseUrl) {
+                document.getElementById('baseUrl').value = savedBaseUrl;
+            }
+            if (savedProjectId) {
+                document.getElementById('projectId').value = savedProjectId;
+            }
+        });
+
+        // 保存配置
+        function saveConfig(event) {
+            event.preventDefault();
+
+            const apiToken = document.getElementById('apiToken').value.trim();
+            const baseUrl = document.getElementById('baseUrl').value.trim();
+            const projectId = document.getElementById('projectId').value.trim();
+
+            if (!apiToken) {
+                showStatus('请输入API Token', 'error');
+                return;
+            }
+
+            // 保存到localStorage
+            localStorage.setItem('api_token', apiToken);
+            localStorage.setItem('api_base_url', baseUrl);
+            localStorage.setItem('api_project_id', projectId);
+
+            showStatus('配置已保存！正在跳转到工作台...', 'success');
+
+            // 更新api.js文件
+            setTimeout(() => {
+                // 跳转到主页面
+                window.location.href = 'index.html';
+            }, 1500);
+        }
+
+        // 显示状态信息
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+    </script>
+</body>
+</html>
