@@ -6,6 +6,16 @@
     <title>教育内容策略优化工作台</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // 页面加载时检查API Token
+        window.addEventListener('load', function() {
+            const apiToken = localStorage.getItem('api_token');
+            if (!apiToken || apiToken === '<YOUR_API_TOKEN>') {
+                alert('⚠️ 请先配置API Token\n\n即将跳转到配置页面...');
+                window.location.href = 'config.html';
+            }
+        });
+    </script>
 </head>
 <body>
     <div class="app-container">
