@@ -38,21 +38,9 @@ async function sendMessageToAPI(message, onMessage, onComplete, onError) {
                 'Authorization': `Bearer ${apiToken}`
             },
             body: JSON.stringify({
-                type: 'query',
+                text: message,
                 session_id: currentSessionId,
-                project_id: API_CONFIG.projectId,
-                content: {
-                    query: {
-                        prompt: [
-                            {
-                                type: 'text',
-                                content: {
-                                    text: message
-                                }
-                            }
-                        ]
-                    }
-                }
+                project_id: API_CONFIG.projectId
             })
         });
 
@@ -81,39 +69,12 @@ async function sendMessageToAPI(message, onMessage, onComplete, onError) {
 
                     try {
                         const parsed = JSON.parse(data);
-
-                        // 支持 Coze 流式响应格式
-                        // 格式1: { "data": { "type": "answer", "content": { "text": "..." } } }
-                        // 格式2: { "event": "message", "data": { "type": "answer", "content": "..." } }
-                        // 格式3: { "content": "..." }
-
-                        let content = '';
-
-                        if (parsed.data && parsed.data.type === 'answer') {
-                            // Coze 格式: data.type === 'answer'
-                            if (parsed.data.content) {
-                                if (typeof parsed.data.content === 'string') {
-                                    content = parsed.data.content;
-                                } else if (parsed.data.content.text) {
-                                    content = parsed.data.content.text;
-                                }
-                            }
-                        } else if (parsed.content) {
-                            // 通用格式
-                            if (typeof parsed.content === 'string') {
-                                content = parsed.content;
-                            } else if (parsed.content.text) {
-                                content = parsed.content.text;
-                            }
-                        }
-
-                        if (content) {
-                            fullResponse += content;
-                            if (onMessage) onMessage(content);
+                        if (parsed.content) {
+                            fullResponse += parsed.content;
+                            if (onMessage) onMessage(parsed.content);
                         }
                     } catch (e) {
                         console.error('Error parsing JSON:', e);
-                        console.error('Raw data:', data);
                     }
                 }
             }
